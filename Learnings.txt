@@ -1,0 +1,33 @@
+- Introduced only attention and threw away rnn type seq by seq
+
+Encoder: 6 layers
+-Mutlihead self attention
+-FFNN , residual connection + layer norm
+-d model = 512
+
+Decoder : 6 layers
+-cross multi head attention
+-self attention is masked for fuure tokens
+
+Attention:
+- q, k , v (output = weighted sum of values; weights~ compatibilty)
+- /sqtrt(dk) because large dot product magnitude ->large softmax -> small gradients
+- 8 heads
+
+Training data: 
+WMT 2014 English-German dataset
+Sentences were encoded using byte-pair encoding
+WMT 2014 English-French dataset 
+32000 word-piecevocabulary
+25000 source tokens and 25000 target tokens
+
+Training:
+ 100,000 steps
+big models were trained for 300,000 steps
+Adam optimizer with β1 = 0.9, β2 = 0.98 and ϵ = 10−9
+
+
+
+
+
+BLEU Score
