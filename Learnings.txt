@@ -1,0 +1,48 @@
+
+
+---------
+build different layers of model as classes with forward doing the operation needed
+then using those class instances as input define blocks (repeating in archtitecture)
+because we can set the different parameters of each layer while making block giving us more freedom when we put number in our archticture
+------
+how to bulid residual connection
+-------
+class (block of model) is combination of other defined classes (layers of model):
+# input of init are instances Of the layers 
+# nn.ModuleList
+--------
+
+
+----------
+in class of nn.Module 
+# take care of batch size dim
+#parameters of init : parameter to define layers , shapes , dropout
+
+in init :
+define learnable weights 
+layers
+values that donot depend on input
+
+in forward :
+if donot want to flow grad  on some values do require grad = False
+perform actions on input
+
+------------
+
+
+
+
+
+
+
+
+
+# nn.Embedding
+# torch.arange
+# nn.Parameter
+# .view()
+# .masked_fill_
+# .softmax()
+# .contiguous()
+# nn.ModuleList()
+# torch.log_softmax
