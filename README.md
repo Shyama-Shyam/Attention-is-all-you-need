@@ -1,4 +1,5 @@
 # Attention-is-all-you-need
+Paper implementation in PyTorch
 
 ## References
 
