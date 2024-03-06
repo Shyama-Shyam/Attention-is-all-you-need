@@ -1,5 +1,6 @@
 # Attention-is-all-you-need
 Paper implementation in PyTorch
+Coded by following Umar Jamil video on Transformers (https://youtu.be/ISNdQcPhsts?si=K-baIBjHucwGM_qM)
 
 ## References
 
