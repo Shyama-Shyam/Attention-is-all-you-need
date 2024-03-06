@@ -46,7 +46,7 @@ class LayerNormalization(nn.Module):
         std = x.std(dim = -1, keepdim = True)
         return (self.alpha * (x - mean)  / (std + self.eps)) + self.bias
 
-class FeedForwardBloack(nn.Module):
+class FeedForwardBlock(nn.Module):
 
     def __init__(self, d_model: int, d_ff: int, dropout: float) -> None:
         super().__init__()
@@ -112,7 +112,7 @@ class ResidualConnection(nn.Module):
     
 class EncoderBlock(nn.Module):
 
-    def __init__(self, self_attention_block: MultiHeadAttentionBlock, feed_forward_block: FeedForwardBloack, dropout: float) :
+    def __init__(self, self_attention_block: MultiHeadAttentionBlock, feed_forward_block: FeedForwardBlock, dropout: float) :
         super().__init__()
         self.self_attention_block = self_attention_block
         self.feed_forward_block = feed_forward_block
@@ -137,7 +137,7 @@ class Encoder(nn.Module):
     
 class DecoderBlock(nn.Module):
 
-    def __init__(self, self_attention_block: MultiHeadAttentionBlock, cross_attention_block: MultiHeadAttentionBlock, feed_forward_block: FeedForwardBloack, dropout: float):
+    def __init__(self, self_attention_block: MultiHeadAttentionBlock, cross_attention_block: MultiHeadAttentionBlock, feed_forward_block: FeedForwardBlock, dropout: float):
         super().__init__()
         self.self_attention_block = self_attention_block
         self.cross_attention_block = cross_attention_block

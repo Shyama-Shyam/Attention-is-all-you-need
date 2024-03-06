@@ -5,6 +5,9 @@ build different layers of model as classes with forward doing the operation need
 then using those class instances as input define blocks (repeating in archtitecture)
 because we can set the different parameters of each layer while making block giving us more freedom when we put number in our archticture
 ------
+def build transformer : given hyperparameter return transformer , and also with some initialized weights
+
+----------------
 how to bulid residual connection
 -------
 class (block of model) is combination of other defined classes (layers of model):
@@ -46,3 +49,4 @@ perform actions on input
 # .contiguous()
 # nn.ModuleList()
 # torch.log_softmax
+# nn.init.xavier_uniform_(p)
