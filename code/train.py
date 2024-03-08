@@ -6,6 +6,7 @@ from torch.utils.tensorboard import SummaryWriter
 from build_transformer import *
 from build_tokenizer import *
 from build_dataset import *
+from validate import *
 from config import *
 
 def train_model(config):
@@ -14,7 +15,11 @@ def train_model(config):
 
     Path(config['model_folder']).mkdir(parents = True, exist_ok = True)
 
-    train_dataloader, val_dataloader, tokenizer_src, tokenizer_tgt = get_ds(config)
+    #train_dataloader, val_dataloader, tokenizer_src, tokenizer_tgt = get_ds(config)
+    train_tokenizer(config)#new
+    tokenizer_src = get_tokenizer(config, config['lang_src'])#new
+    tokenizer_tgt = get_tokenizer(config, config['lang_tgt'])#new
+
     model = get_model(config, tokenizer_src.get_vocab_size(), tokenizer_tgt.get_vocab_size()).to(device)
 
     writer = SummaryWriter(config["experiment_name"])
@@ -38,6 +43,7 @@ def train_model(config):
     loss_fn = nn.CrossEntropyLoss(ignore_index = tokenizer_src.token_to_id('[PAD]'), label_smoothing=0.1).to(device)
 
     for epoch in range(initial_epoch, config['num_epochs']):
+        train_dataloader, val_dataloader = get_ds(config, tokenizer_src, tokenizer_tgt)#new
         torch.cuda.empty_cache()
         model.train()
         batch_iterator = tqdm(train_dataloader, desc=f"Processing Epoch {epoch:02d}")
@@ -65,8 +71,10 @@ def train_model(config):
             loss.backward()
             optimizer.step()
             optimizer.zero_grad(set_to_none=True)
+            #run_validation(model, val_dataloader, tokenizer_tgt, config['seq_len'], device, lambda msg: batch_iterator.write(msg), global_step, writer)
             global_step += 1
 
+        run_validation(model, val_dataloader, tokenizer_tgt, config['seq_len'], device, lambda msg: batch_iterator.write(msg), global_step, writer)
         model_filename = get_weights_file_path(config, f"{epoch:02d}")
         torch.save({
             'epoch': epoch,

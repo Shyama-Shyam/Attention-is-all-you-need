@@ -1,5 +1,9 @@
 
 
+
+_______________
+
+details of training loop its components and structure
 ---------
 build different layers of model as classes with forward doing the operation needed
 then using those class instances as input define blocks (repeating in archtitecture)
@@ -37,9 +41,9 @@ perform actions on input
 
 
 
-
-
-
+# .fill , .type_as, .squeeze, .unsqueeze, .size 
+# torch.empty
+#  torchmetrics
 # nn.Embedding
 # torch.arange
 # nn.Parameter

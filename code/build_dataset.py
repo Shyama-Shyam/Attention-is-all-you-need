@@ -16,9 +16,9 @@ class BilingualDataset(Dataset):
         self.tgt_lang = tgt_lang
         self.seq_len = seq_len
 
-        self.sos_token = torch.tensor([tokenizer_src.token_to_id('[SOS]')], dtype = torch.int64)
-        self.pad_token = torch.tensor([tokenizer_src.token_to_id('[PAD]')], dtype = torch.int64)
-        self.eos_token = torch.tensor([tokenizer_src.token_to_id('[EOS]')], dtype = torch.int64)
+        self.sos_token = torch.tensor([tokenizer_tgt.token_to_id('[SOS]')], dtype = torch.int64)
+        self.pad_token = torch.tensor([tokenizer_tgt.token_to_id('[PAD]')], dtype = torch.int64)
+        self.eos_token = torch.tensor([tokenizer_tgt.token_to_id('[EOS]')], dtype = torch.int64)
     
     def __len__(self):
         return len(self.ds)
@@ -77,14 +77,14 @@ class BilingualDataset(Dataset):
 def causal_mask(size):
     mask = torch.triu(torch.ones(1, size, size), diagonal = 1).type(torch.int)
     return mask ==0
-
+'''
 def get_ds(config):
-    ds_raw = load_dataset("adilgupta/cfilt-iitb-en-hi-truncated", split= 'train')
+    ds_raw = load_dataset("adilgupta/cfilt-iitb-en-hi-truncated", split= 'train').shuffle().select(range(config['dataset_size']))
 
     tokenizer_src = get_or_build_tokenizer(config, ds_raw, config['lang_src'])
     tokenizer_tgt = get_or_build_tokenizer(config, ds_raw, config['lang_tgt'])
 
-    train_ds_size = int(0.9*len(ds_raw))
+    train_ds_size = int(0.99*len(ds_raw))
     val_ds_size = len(ds_raw)- train_ds_size
     train_ds_raw, val_ds_raw = random_split(ds_raw, [train_ds_size, val_ds_size])
 
@@ -96,3 +96,18 @@ def get_ds(config):
     val_dataloader = DataLoader(val_ds,batch_size = config['batch_size'], shuffle = True )
 
     return train_dataloader, val_dataloader, tokenizer_src, tokenizer_tgt
+'''
+def get_ds(config, tokenizer_src, tokenizer_tgt):
+    ds_raw = load_dataset("adilgupta/cfilt-iitb-en-hi-truncated", split= 'train').shuffle().select(range(config['dataset_size']))
+
+    train_ds_size = int(0.99*len(ds_raw))
+    val_ds_size = len(ds_raw)- train_ds_size
+    train_ds_raw, val_ds_raw = random_split(ds_raw, [train_ds_size, val_ds_size])
+    print('building new dataset for the epoch.....')
+    train_ds = BilingualDataset(train_ds_raw, tokenizer_src, tokenizer_tgt, config['lang_src'], config['lang_tgt'], config['seq_len'])
+    val_ds = BilingualDataset(val_ds_raw, tokenizer_src, tokenizer_tgt, config['lang_src'], config['lang_tgt'], config['seq_len'])
+
+    train_dataloader = DataLoader(train_ds, batch_size = config['batch_size'], shuffle = True)
+    val_dataloader = DataLoader(val_ds,batch_size = 1, shuffle = True )
+
+    return train_dataloader, val_dataloader
