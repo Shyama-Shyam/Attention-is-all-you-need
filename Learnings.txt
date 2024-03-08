@@ -50,3 +50,5 @@ perform actions on input
 # nn.ModuleList()
 # torch.log_softmax
 # nn.init.xavier_uniform_(p)
+# torch.cat()
+# torch.triu
